@@ -2,50 +2,141 @@
 
 using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 
+Console.WriteLine(Environment.ProcessorCount);
 BenchmarkRunner.Run<Benchmarks>();
 
 [RankColumn]
+//[MinIterationCount(1)]
+//[MaxIterationCount(5)]
 public class Benchmarks
 {
-    private static readonly int[] Values = Enumerable.Range(0, 50_000).ToArray();
+    static int Parallellism = Environment.ProcessorCount - 2;
+
+    private static readonly int[] Values =
+        Enumerable.Range(0, 500_000 * Parallellism) //Make sure the parallell versions can work with whole chunks each
+        .Select(i => i % 7) // 
+        .ToArray();
+
 
     [Benchmark(Baseline = true)]
-    public int SumForLoop() 
+    public int SumForLoop()
     {
         var acc = 0;
         for (var i = 0; i < Values.Length; i++)
-            acc += i;
+            acc += Values[i];
 
         return acc;
     }
-    
+
+    [Benchmark]
+    public int SumForLoopUnrolled()
+    {
+        var acc = 0;
+        int chunkSize = 16; //16 * 32 = 512 bits, so maybe the compiler is clever and optimizes for us?
+        int numChunks = Values.Length / chunkSize;
+        var span = new ReadOnlySpan<int>(Values, 0, numChunks * chunkSize);
+
+        for (var i = 0; i < span.Length; i += 16)
+        {
+            acc = acc + span[i + 0] + span[i + 1] + span[i + 2] + span[i + 3]
+                      + span[i + 4] + span[i + 5] + span[i + 6] + span[i + 7]
+                      + span[i + 8] + span[i + 9] + span[i + 10] + span[i + 11]
+                      + span[i + 12] + span[i + 13] + span[i + 14] + span[i + 15]
+                      ;
+        }
+        // Handle remaining elements if Values.Length is not a multiple of chunkSize
+        for (int i = numChunks % chunkSize; i < Values.Length; i++)
+        {
+            acc += Values[i];
+        }
+
+        return acc;
+    }
+
+    [Benchmark]
+    public int SumForLoopSpan()
+    {
+        var span = new ReadOnlySpan<int>(Values);
+        var acc = 0;
+        for (var i = 0; i < span.Length; i++)
+            acc += span[i];
+
+        return acc;
+    }
+
+    [Benchmark]
+    public async Task<int> SumTaskThreaded()
+    {
+
+        int chunkSize = Values.Length / Parallellism; //NOTE: assumes Values.Length is divisible by count
+
+        var chuckSum = new Func<int, int>(i =>
+        {
+            var span = new ReadOnlySpan<int>(Values, i * chunkSize, chunkSize);
+            int acc = 0;
+            for (int j = 0; j < chunkSize; j++)
+            {
+                acc += span[j];
+            }
+            return acc;
+        });
+
+        var tasks = Enumerable.Range(0, Parallellism)
+            .Select(i => Task.Run(() => chuckSum(i)));
+        var partSums = await Task.WhenAll(tasks);
+        return partSums.Sum();
+    }
+
+    [Benchmark]
+    public async Task<int> SumLinqThreadedSimd()
+    {
+        int chunkSize = Values.Length / Parallellism; //NOTE: assumes Values.Length is divisible by count
+
+        var chuckSum = new Func<int, int>(i =>
+        {
+            var span = new ReadOnlySpan<int>(Values, i * chunkSize, chunkSize);
+            return SumLinqSimdNaiveImpl(span);
+        });
+
+        var tasks = Enumerable.Range(0, Parallellism)
+            .Select(i => Task.Run(() => chuckSum(i)));
+        var partSums = await Task.WhenAll(tasks);
+        return partSums.Sum();
+    }
+
     [Benchmark]
     public int SumLinq() => Values.Sum();
-    
+
     [Benchmark]
     public int SumPLinq() => Values.AsParallel().Sum();
 
     [Benchmark]
     public int SumLinqSimdNaive()
     {
+        return SumLinqSimdNaiveImpl(Values);
+    }
+
+    public int SumLinqSimdNaiveImpl(ReadOnlySpan<int> values)
+    {
         // The performant way of getting an array of vectors rather than doing it by hand
-        var vectors = MemoryMarshal.Cast<int, Vector<int>>(Values);
+        var vectors = MemoryMarshal.Cast<int, Vector<int>>(values);
         var accVector = Vector<int>.Zero;
-    
+
         foreach (var vector in vectors)
         {
             accVector += vector;
         }
 
         var remainder = 0;
-        for (var i = Values.Length - (Values.Length % Vector<int>.Count); i < Values.Length; i++)
+        for (var i = values.Length - (values.Length % Vector<int>.Count); i < values.Length; i++)
         {
-            remainder += Values[i];
+            remainder += values[i];
         }
-    
+
         // Combine vector sum and remainder
         return Vector.Sum(accVector) + remainder;
     }
@@ -79,7 +170,7 @@ public class Benchmarks
         {
             var startingLastElements = Values.Length - remainingElements;
             var remainingElementsSlice = Values[startingLastElements..];
-        
+
             accVector += new Vector<int>(remainingElementsSlice);
         }
 
