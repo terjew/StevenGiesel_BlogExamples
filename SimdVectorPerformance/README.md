@@ -70,5 +70,19 @@ Here are the results from the benchmark on various machines I have access to:
 | SumTaskThreaded      |   596.3 us |  9.25 us |  14.66 us |   599.9 us |  0.29 |    0.01 |    1 |
 | SumTaskThreadedSimd  |   562.7 us | 18.23 us |  53.74 us |   528.2 us |  0.28 |    0.03 |    1 |
 
+## Macbook Pro 2013 i7-4558U (?) (AVX, 4 cores) (.NET 8)
+### ConcurrencyFactor=4
+| Method               | Mean       | Error    | StdDev   | Ratio | RatioSD | Rank |
+|--------------------- |-----------:|---------:|---------:|------:|--------:|-----:|
+| SumForLoop           | 2,980.4 us | 38.53 us | 36.05 us |  1.00 |    0.02 |    5 |
+| SumForLoopUnrolled   | 5,115.6 us | 35.27 us | 31.27 us |  1.72 |    0.02 |    7 |
+| SumForLoopSpan       | 2,967.3 us | 36.53 us | 34.17 us |  1.00 |    0.02 |    5 |
+| SumLinq              | 1,560.2 us | 10.61 us |  9.41 us |  0.52 |    0.01 |    4 |
+| SumPLinq             | 3,997.5 us | 43.80 us | 38.83 us |  1.34 |    0.02 |    6 |
+| SumLinqSimdNaive     | 1,148.1 us |  8.16 us |  7.63 us |  0.39 |    0.01 |    3 |
+| SumLinqSimdBetter    | 1,114.1 us | 18.16 us | 16.99 us |  0.37 |    0.01 |    3 |
+| SumLinqSimdUnrolled4 | 1,111.7 us | 12.91 us | 12.08 us |  0.37 |    0.01 |    3 |
+| SumTaskThreaded      |   990.6 us | 17.79 us | 17.47 us |  0.33 |    0.01 |    2 |
+| SumTaskThreadedSimd  |   926.2 us |  3.25 us |  2.88 us |  0.31 |    0.00 |    1 |
 
 ```
