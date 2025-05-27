@@ -14,7 +14,7 @@ BenchmarkRunner.Run<Benchmarks>();
 //[MaxIterationCount(5)]
 public class Benchmarks
 {
-    static int Parallellism = 30;
+    static int ConcurrencyFactor = 10;
 
     private static readonly int[] Values =
         Enumerable.Range(0, 5_000_000)
@@ -67,47 +67,7 @@ public class Benchmarks
 
         return acc;
     }
-
-    [Benchmark]
-    public async Task<int> SumTaskThreaded()
-    {
-
-        int chunkSize = Values.Length / Parallellism; //NOTE: assumes Values.Length is divisible by count
-
-        var chuckSum = new Func<int, int>(i =>
-        {
-            var span = new ReadOnlySpan<int>(Values, i * chunkSize, chunkSize);
-            int acc = 0;
-            for (int j = 0; j < chunkSize; j++)
-            {
-                acc += span[j];
-            }
-            return acc;
-        });
-
-        var tasks = Enumerable.Range(0, Parallellism)
-            .Select(i => Task.Run(() => chuckSum(i)));
-        var partSums = await Task.WhenAll(tasks);
-        return partSums.Sum();
-    }
-
-    [Benchmark]
-    public async Task<int> SumLinqThreadedSimd()
-    {
-        int chunkSize = Values.Length / Parallellism; //NOTE: assumes Values.Length is divisible by count
-
-        var chuckSum = new Func<int, int>(i =>
-        {
-            var span = new ReadOnlySpan<int>(Values, i * chunkSize, chunkSize);
-            return SumLinqSimdNaiveImpl(span);
-        });
-
-        var tasks = Enumerable.Range(0, Parallellism)
-            .Select(i => Task.Run(() => chuckSum(i)));
-        var partSums = await Task.WhenAll(tasks);
-        return partSums.Sum();
-    }
-
+    
     [Benchmark]
     public int SumLinq() => Values.Sum();
 
@@ -218,4 +178,45 @@ public class Benchmarks
 
         return Vector.Sum(accVector);
     }
+
+    [Benchmark]
+    public async Task<int> SumTaskThreaded()
+    {
+
+        int chunkSize = Values.Length / ConcurrencyFactor; //NOTE: assumes Values.Length is divisible by count
+
+        var chuckSum = new Func<int, int>(i =>
+        {
+            var span = new ReadOnlySpan<int>(Values, i * chunkSize, chunkSize);
+            int acc = 0;
+            for (int j = 0; j < chunkSize; j++)
+            {
+                acc += span[j];
+            }
+            return acc;
+        });
+
+        var tasks = Enumerable.Range(0, ConcurrencyFactor)
+            .Select(i => Task.Run(() => chuckSum(i)));
+        var partSums = await Task.WhenAll(tasks);
+        return partSums.Sum();
+    }
+
+    [Benchmark]
+    public async Task<int> SumTaskThreadedSimd()
+    {
+        int chunkSize = Values.Length / ConcurrencyFactor; //NOTE: assumes Values.Length is divisible by count
+
+        var chuckSum = new Func<int, int>(i =>
+        {
+            var span = new ReadOnlySpan<int>(Values, i * chunkSize, chunkSize);
+            return SumLinqSimdNaiveImpl(span);
+        });
+
+        var tasks = Enumerable.Range(0, ConcurrencyFactor)
+            .Select(i => Task.Run(() => chuckSum(i)));
+        var partSums = await Task.WhenAll(tasks);
+        return partSums.Sum();
+    }
+
 }
