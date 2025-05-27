@@ -14,10 +14,10 @@ BenchmarkRunner.Run<Benchmarks>();
 //[MaxIterationCount(5)]
 public class Benchmarks
 {
-    static int Parallellism = Environment.ProcessorCount - 2;
+    static int Parallellism = 30;
 
     private static readonly int[] Values =
-        Enumerable.Range(0, 500_000 * Parallellism) //Make sure the parallell versions can work with whole chunks each
+        Enumerable.Range(0, 5_000_000)
         .Select(i => i % 7) // 
         .ToArray();
 
