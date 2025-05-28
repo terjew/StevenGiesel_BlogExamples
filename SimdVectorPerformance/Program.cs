@@ -1,8 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using System.Numerics;
+﻿using System.Numerics;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 
@@ -14,7 +11,7 @@ BenchmarkRunner.Run<Benchmarks>();
 //[MaxIterationCount(5)]
 public class Benchmarks
 {
-    static int ConcurrencyFactor = 10;
+    static int ConcurrencyFactor = 8;
 
     private static readonly int[] Values =
         Enumerable.Range(0, 5_000_000)
@@ -138,9 +135,13 @@ public class Benchmarks
     }
 
     [Benchmark]
-    public int SumLinqSimdUnrolled4()
+    public int SumLinqSimdUnrolled4(){
+        return SumLinqSimdUnrolled4Impl(Values);
+    }
+
+    public int SumLinqSimdUnrolled4Impl(ReadOnlySpan<int> values)
     {
-        var vectors = MemoryMarshal.Cast<int, Vector<int>>(Values);
+        var vectors = MemoryMarshal.Cast<int, Vector<int>>(values);
         var simdCount = vectors.Length;
 
         // Four accumulators to enable EVEN MORE ILP
@@ -168,11 +169,11 @@ public class Benchmarks
         }
 
         // Handle remaining elements that didn't fit into a vector
-        var remainingElements = Values.Length % Vector<int>.Count;
+        var remainingElements = values.Length % Vector<int>.Count;
         if (remainingElements > 0)
         {
             Span<int> lastVectorElements = stackalloc int[Vector<int>.Count];
-            Values[^remainingElements..].CopyTo(lastVectorElements);
+            values[^remainingElements..].CopyTo(lastVectorElements);
             accVector += new Vector<int>(lastVectorElements);
         }
 
@@ -211,6 +212,23 @@ public class Benchmarks
         {
             var span = new ReadOnlySpan<int>(Values, i * chunkSize, chunkSize);
             return SumLinqSimdNaiveImpl(span);
+        });
+
+        var tasks = Enumerable.Range(0, ConcurrencyFactor)
+            .Select(i => Task.Run(() => chuckSum(i)));
+        var partSums = await Task.WhenAll(tasks);
+        return partSums.Sum();
+    }
+
+    [Benchmark]
+    public async Task<int> SumTaskThreadedSimdUnrolled()
+    {
+        int chunkSize = Values.Length / ConcurrencyFactor; //NOTE: assumes Values.Length is divisible by count
+
+        var chuckSum = new Func<int, int>(i =>
+        {
+            var span = new ReadOnlySpan<int>(Values, i * chunkSize, chunkSize);
+            return SumLinqSimdUnrolled4Impl(span);
         });
 
         var tasks = Enumerable.Range(0, ConcurrencyFactor)
