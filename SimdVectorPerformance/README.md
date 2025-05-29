@@ -80,19 +80,19 @@ Here are the results from the benchmark on various machines I have access to:
 | SumTaskThreadedSimd  |   926.2 us |  3.25 us |  2.88 us |  0.31 |    0.00 |    1 |
 
 ## Mac Mini M1 (AdvSIMD, 8 cores)
-ConcurrencyFactor = 6
+ConcurrencyFactor = 32
 
 | Method                      | Mean       | Error    | StdDev   | Ratio | Rank |
 |---------------------------- |-----------:|---------:|---------:|------:|-----:|
-| SumForLoop                  | 1,874.4 us |  1.03 us |  0.96 us |  1.00 |    7 |
-| SumForLoopUnrolled          | 3,627.6 us |  1.44 us |  1.20 us |  1.94 |    9 |
-| SumForLoopSpan              | 1,886.3 us |  0.38 us |  0.36 us |  1.01 |    7 |
-| SumLinq                     | 1,015.0 us |  0.44 us |  0.39 us |  0.54 |    6 |
-| SumPLinq                    | 2,181.4 us | 24.63 us | 21.84 us |  1.16 |    8 |
-| SumLinqSimdNaive            |   788.2 us |  0.14 us |  0.12 us |  0.42 |    5 |
-| SumLinqSimdBetter           |   409.9 us |  7.24 us |  6.77 us |  0.22 |    3 |
-| SumLinqSimdUnrolled4        |   318.0 us |  0.46 us |  0.41 us |  0.17 |    2 |
-| SumTaskThreaded             |   556.3 us |  7.18 us |  6.72 us |  0.30 |    4 |
-| SumTaskThreadedSimd         |   284.6 us |  3.51 us |  3.28 us |  0.15 |    1 |
-| SumTaskThreadedSimdUnrolled |   278.8 us |  1.80 us |  1.59 us |  0.15 |    1 |
+| SumTaskThreaded             |   489.8 us |  3.49 us |  3.26 us |  0.26 |    4 |
+| SumTaskThreadedSimd         |   280.4 us |  1.05 us |  0.93 us |  0.15 |    1 |
+| SumTaskThreadedSimdUnrolled |   277.4 us |  0.87 us |  0.82 us |  0.15 |    1 |
+| SumForLoop                  | 1,876.9 us |  0.62 us |  0.52 us |  1.00 |    7 |
+| SumForLoopUnrolled          | 3,622.2 us |  1.75 us |  1.55 us |  1.93 |    9 |
+| SumForLoopSpan              | 1,882.9 us |  0.32 us |  0.30 us |  1.00 |    7 |
+| SumLinq                     | 1,013.4 us |  0.44 us |  0.41 us |  0.54 |    6 |
+| SumPLinq                    | 2,145.8 us | 13.61 us | 12.07 us |  1.14 |    8 |
+| SumLinqSimdNaive            |   784.7 us |  0.11 us |  0.10 us |  0.42 |    5 |
+| SumLinqSimdBetter           |   408.4 us |  1.85 us |  1.64 us |  0.22 |    3 |
+| SumLinqSimdUnrolled4        |   317.6 us |  0.57 us |  0.48 us |  0.17 |    2 |
 

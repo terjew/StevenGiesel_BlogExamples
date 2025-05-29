@@ -97,9 +97,11 @@ public class ConcurrentBenchmarks : BenchmarkBase
         AllCores =              unchecked((int)0b1111_1111_1111_1111_1111_1111_1111_1111), // "All" cores (except one efficiency core)
     }
 
-    //[Params(96,104,112,120,128,192,256)]
-    //Note: Experimenting with this, I found that 128 seems to be the sweet spot for the Intel Core i9-14900K.
-    public static int ConcurrencyFactor = 128;
+    // [Params(4,8,16,32,64,128,256)]
+    //Note: Experimenting with this, I found that 
+    // 128 seems to be the sweet spot for the Intel Core i9-14900K (total of 32 cores).
+    // 32 seems to be the sweet spot for the ARM M1 (total of 8 cores).
+    public static int ConcurrencyFactor = Environment.ProcessorCount * 4;
 
     //Note: Experimenting with this on the Intel Core i9-14900K, I found that given a relatively high ConcurrencyFactor (above 64),
     //enabling all cores gives the best results for all multithreaded benchmarks.
@@ -107,10 +109,10 @@ public class ConcurrentBenchmarks : BenchmarkBase
 
     static ConcurrentBenchmarks()
     {
-        var process = Process.GetCurrentProcess();
-        process.PriorityClass = ProcessPriorityClass.High;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
+            var process = Process.GetCurrentProcess();
+            process.PriorityClass = ProcessPriorityClass.High;
             unchecked
             {
                 if (Affinity != AffinityType.AllCores)
