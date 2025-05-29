@@ -80,10 +80,10 @@ public class BenchmarkBase
 
 [RankColumn]
 //These are useful when tuning the parameters, as the benchmarks will otherwise take ages to complete
-[MinIterationCount(5)]
-[MaxIterationCount(10)]
-[MinWarmupCount(5)]
-[MaxWarmupCount(10)]
+//[MinIterationCount(5)]
+//[MaxIterationCount(10)]
+//[MinWarmupCount(5)]
+//[MaxWarmupCount(10)]
 public class ConcurrentBenchmarks : BenchmarkBase
 {
     //Note: These are hardcoded for the Intel Core i9-14900K, which has 8 performance cores and 16 efficiency cores.
@@ -102,7 +102,7 @@ public class ConcurrentBenchmarks : BenchmarkBase
     // 128 seems to be the sweet spot for the Intel Core i9-14900K (total of 32 cores).
     // 32 seems to be the sweet spot for the ARM M1 (total of 8 cores).
     // 128 is also the sweet spot for the i7-1355U (total of 12 cores).
-    public static int ConcurrencyFactor = Environment.ProcessorCount * 4;
+    public static int ConcurrencyFactor = 128;
 
     //Note: Experimenting with this on the Intel Core i9-14900K, I found that given a relatively high ConcurrencyFactor (above 64),
     //enabling all cores gives the best results for all multithreaded benchmarks.

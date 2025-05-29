@@ -51,20 +51,20 @@ Here are the results from the benchmark on various machines I have access to:
 | SumLinqSimdUnrolled4        |   246.47 us |  4.886 us |  6.849 us |  0.27 |    0.01 |    3 |
 
 ## Razer Blade Pro 2019 i7-8750H (AVX2, 6 cores)
-### ConcurrencyFactor=8
-
-| Method               | Mean       | Error    | StdDev    | Median     | Ratio | RatioSD | Rank |
-|--------------------- |-----------:|---------:|----------:|-----------:|------:|--------:|-----:|
-| SumForLoop           | 2,038.8 us | 17.20 us |  14.36 us | 2,037.4 us |  1.00 |    0.01 |    4 |
-| SumForLoopUnrolled   | 4,955.5 us | 33.53 us |  26.18 us | 4,957.6 us |  2.43 |    0.02 |    6 |
-| SumForLoopSpan       | 2,007.9 us | 13.20 us |  11.02 us | 2,013.5 us |  0.98 |    0.01 |    4 |
-| SumLinq              | 1,135.7 us |  9.89 us |   8.25 us | 1,135.8 us |  0.56 |    0.01 |    3 |
-| SumPLinq             | 2,797.5 us | 87.63 us | 248.59 us | 2,735.7 us |  1.37 |    0.12 |    5 |
-| SumLinqSimdNaive     |   811.9 us | 15.91 us |  23.82 us |   804.9 us |  0.40 |    0.01 |    2 |
-| SumLinqSimdBetter    |   835.4 us | 15.29 us |  19.88 us |   830.0 us |  0.41 |    0.01 |    2 |
-| SumLinqSimdUnrolled4 |   818.2 us | 15.74 us |  21.55 us |   808.6 us |  0.40 |    0.01 |    2 |
-| SumTaskThreaded      |   596.3 us |  9.25 us |  14.66 us |   599.9 us |  0.29 |    0.01 |    1 |
-| SumTaskThreadedSimd  |   562.7 us | 18.23 us |  53.74 us |   528.2 us |  0.28 |    0.03 |    1 |
+### ConcurrencyFactor=128
+| Method                      | Mean       | Error    | StdDev   | Ratio | RatioSD | Rank |
+|---------------------------- |-----------:|---------:|---------:|------:|--------:|-----:|
+| SumTaskThreaded             |   584.0 us | 10.36 us |  9.69 us |  0.29 |    0.00 |    2 |
+| SumTaskThreadedSimd         |   478.3 us |  2.91 us |  2.43 us |  0.24 |    0.00 |    1 |
+| SumTaskThreadedSimdUnrolled |   478.1 us |  4.12 us |  3.44 us |  0.24 |    0.00 |    1 |
+| SumForLoop                  | 2,001.0 us |  9.43 us |  8.82 us |  1.00 |    0.01 |    5 |
+| SumForLoopUnrolled          | 4,096.7 us | 33.38 us | 29.59 us |  2.05 |    0.02 |    7 |
+| SumForLoopSpan              | 1,998.8 us | 10.90 us |  9.66 us |  1.00 |    0.01 |    5 |
+| SumLinq                     | 1,131.8 us | 12.47 us | 11.05 us |  0.57 |    0.01 |    4 |
+| SumPLinq                    | 2,371.1 us | 22.72 us | 21.25 us |  1.18 |    0.01 |    6 |
+| SumLinqSimdNaive            |   799.9 us | 15.41 us | 21.09 us |  0.40 |    0.01 |    3 |
+| SumLinqSimdBetter           |   818.7 us |  8.01 us |  7.49 us |  0.41 |    0.00 |    3 |
+| SumLinqSimdUnrolled4        |   793.9 us |  8.48 us |  7.52 us |  0.40 |    0.00 |    3 |
 
 ## Macbook Pro 2013 i7-4558U (?) (AVX, 4 cores) (.NET 8)
 ### ConcurrencyFactor=4
