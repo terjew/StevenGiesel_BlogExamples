@@ -34,25 +34,19 @@ Here are the results from the benchmark on various machines I have access to:
 
 ## Stationary gaming PC i9-14900KF (AVX2, 8 performance cores, 16 efficiency cores)), 
 
-### ConcurrencyFactor=10
-| Method               | Mean        | Error     | StdDev    | Median      | Ratio | RatioSD | Rank |
-|--------------------- |------------:|----------:|----------:|------------:|------:|--------:|-----:|
-| SumForLoop           |   929.38 us | 12.732 us |  9.940 us |   928.39 us |  1.00 |    0.01 |    7 |
-| SumForLoopUnrolled   | 1,983.53 us | 36.258 us | 64.448 us | 1,953.56 us |  2.13 |    0.07 |    8 |
-| SumForLoopSpan       |   861.95 us |  5.092 us |  4.514 us |   860.54 us |  0.93 |    0.01 |    6 |
-| SumLinq              |   337.20 us |  4.879 us |  4.325 us |   336.13 us |  0.36 |    0.01 |    4 |
-| SumPLinq             |   401.47 us |  1.770 us |  1.656 us |   402.06 us |  0.43 |    0.00 |    5 |
-| SumLinqSimdNaive     |   247.05 us |  2.512 us |  2.350 us |   246.54 us |  0.27 |    0.00 |    3 |
-| SumLinqSimdBetter    |   227.12 us |  0.645 us |  0.571 us |   227.21 us |  0.24 |    0.00 |    2 |
-| SumLinqSimdUnrolled4 |   233.36 us |  3.112 us |  3.584 us |   232.45 us |  0.25 |    0.00 |    2 |
-| SumTaskThreaded      |   231.50 us |  1.943 us |  1.723 us |   230.98 us |  0.25 |    0.00 |    2 |
-| SumTaskThreadedSimd  |    69.79 us |  0.545 us |  0.510 us |    69.74 us |  0.08 |    0.00 |    1 |
-
-### ConcurrencyFactor=30
-| Method               | Mean        | Error     | StdDev    | Ratio | RatioSD | Rank |
-|--------------------- |------------:|----------:|----------:|------:|--------:|-----:|
-| SumTaskThreaded      |   203.38 us |  3.376 us |  3.158 us |  0.21 |    0.01 |    2 |
-| SumTaskThreadedSimd  |    70.17 us |  0.488 us |  0.456 us |  0.07 |    0.00 |    1 |
+| Method                      | Mean        | Error     | StdDev    | Ratio | RatioSD | Rank |
+|---------------------------- |------------:|----------:|----------:|------:|--------:|-----:|
+| SumTaskThreaded             |   160.30 us |  0.702 us |  0.656 us |  0.18 |    0.00 |    2 |
+| SumTaskThreadedSimd         |    46.87 us |  0.359 us |  0.336 us |  0.05 |    0.00 |    1 |
+| SumTaskThreadedSimdUnrolled |    47.78 us |  0.331 us |  0.309 us |  0.05 |    0.00 |    1 |
+| SumForLoop                  |   907.48 us | 12.078 us | 10.707 us |  1.00 |    0.02 |    6 |
+| SumForLoopUnrolled          | 2,007.38 us | 21.444 us | 20.059 us |  2.21 |    0.03 |    7 |
+| SumForLoopSpan              |   914.18 us |  9.328 us |  7.789 us |  1.01 |    0.01 |    6 |
+| SumLinq                     |   336.39 us |  6.013 us |  4.695 us |  0.37 |    0.01 |    4 |
+| SumPLinq                    |   405.60 us |  2.762 us |  2.448 us |  0.45 |    0.01 |    5 |
+| SumLinqSimdNaive            |   256.83 us |  4.781 us |  3.733 us |  0.28 |    0.01 |    3 |
+| SumLinqSimdBetter           |   269.20 us |  4.538 us |  4.245 us |  0.30 |    0.01 |    3 |
+| SumLinqSimdUnrolled4        |   246.47 us |  4.886 us |  6.849 us |  0.27 |    0.01 |    3 |
 
 ## Razer Blade Pro 2019 i7-8750H (AVX2, 6 cores)
 ### ConcurrencyFactor=8
