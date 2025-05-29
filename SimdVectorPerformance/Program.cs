@@ -107,15 +107,15 @@ public class ConcurrentBenchmarks : BenchmarkBase
 
     static ConcurrentBenchmarks()
     {
+        var process = Process.GetCurrentProcess();
+        process.PriorityClass = ProcessPriorityClass.High;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            var process = Process.GetCurrentProcess();
             unchecked
             {
                 if (Affinity != AffinityType.AllCores)
                     process.ProcessorAffinity = (IntPtr)(Affinity);
             }
-            process.PriorityClass = ProcessPriorityClass.High;
         }
     }
 
@@ -237,8 +237,6 @@ public class Benchmarks : ConcurrentBenchmarks
         return SumLinqSimdNaiveImpl(Values);
     }
 
-    
-
     [Benchmark]
     public int SumLinqSimdBetter()
     {
@@ -279,9 +277,5 @@ public class Benchmarks : ConcurrentBenchmarks
     public int SumLinqSimdUnrolled4(){
         return SumLinqSimdUnrolled4Impl(Values);
     }
-
-    
-
-    
 
 }
