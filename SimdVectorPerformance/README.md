@@ -20,19 +20,19 @@ Here are the results from the benchmark on various machines I have access to:
 ## Thinkpad T14S i7-1355U (AVX-512, 2 performance cores, 8 efficiency cores)
 ### ConcurrencyFactor=128
 
-| Method                      | Mean       | Error     | StdDev    | Ratio | RatioSD | Rank |
-|---------------------------- |-----------:|----------:|----------:|------:|--------:|-----:|
-| SumTaskThreaded             |   666.1 us |  13.17 us |   8.71 us |  0.37 |    0.03 |    2 |
-| SumTaskThreadedSimd         |   347.6 us |   7.58 us |   5.01 us |  0.19 |    0.01 |    1 |
-| SumTaskThreadedSimdUnrolled |   347.1 us |  10.30 us |   6.81 us |  0.19 |    0.01 |    1 |
-| SumForLoop                  | 1,815.0 us | 217.53 us | 143.88 us |  1.01 |    0.11 |    5 |
-| SumForLoopUnrolled          | 3,887.4 us | 293.38 us | 194.05 us |  2.15 |    0.19 |    7 |
-| SumForLoopSpan              | 1,649.2 us |  56.65 us |  37.47 us |  0.91 |    0.07 |    5 |
-| SumLinq                     | 1,171.3 us |  31.76 us |  21.01 us |  0.65 |    0.05 |    4 |
-| SumPLinq                    | 2,302.1 us |  45.88 us |  24.00 us |  1.28 |    0.10 |    6 |
-| SumLinqSimdNaive            |   893.5 us |  22.14 us |  14.64 us |  0.50 |    0.04 |    3 |
-| SumLinqSimdBetter           |   927.1 us |  20.25 us |  13.40 us |  0.51 |    0.04 |    3 |
-| SumLinqSimdUnrolled4        |   902.1 us |  26.81 us |  17.73 us |  0.50 |    0.04 |    3 |
+| Method                      | Mean       | Error    | StdDev    | Ratio | RatioSD | Rank |
+|---------------------------- |-----------:|---------:|----------:|------:|--------:|-----:|
+| SumTaskThreaded             |   659.7 us |  6.36 us |   5.31 us |  0.40 |    0.02 |    2 |
+| SumTaskThreadedSimd         |   335.9 us |  6.57 us |   7.56 us |  0.20 |    0.01 |    1 |
+| SumTaskThreadedSimdUnrolled |   346.7 us |  6.85 us |   6.73 us |  0.21 |    0.01 |    1 |
+| SumForLoop                  | 1,661.3 us | 32.95 us |  66.56 us |  1.00 |    0.06 |    5 |
+| SumForLoopUnrolled          | 3,526.4 us | 70.46 us | 132.34 us |  2.13 |    0.12 |    7 |
+| SumForLoopSpan              | 1,606.3 us | 31.54 us |  37.54 us |  0.97 |    0.04 |    5 |
+| SumLinq                     | 1,225.0 us | 31.08 us |  91.65 us |  0.74 |    0.06 |    4 |
+| SumPLinq                    | 2,188.6 us | 16.19 us |  13.52 us |  1.32 |    0.05 |    6 |
+| SumLinqSimdNaive            |   854.8 us | 14.48 us |  13.55 us |  0.52 |    0.02 |    3 |
+| SumLinqSimdBetter           |   895.5 us |  9.13 us |   8.09 us |  0.54 |    0.02 |    3 |
+| SumLinqSimdUnrolled4        |   898.5 us | 14.16 us |  13.25 us |  0.54 |    0.02 |    3 |
 
 ## Stationary gaming PC i9-14900KF (AVX2, 8 performance cores, 16 efficiency cores)), 
 ### ConcurrencyFactor=128
